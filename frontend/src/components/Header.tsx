@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import {
+  Menu,
   Search,
   Bell,
   Moon,
@@ -79,9 +80,10 @@ const INITIAL_NOTIFICATIONS: NotificationItem[] = [
 interface Props {
   onSearch?: (query: string) => void;
   onNavigateTab?: (tab: string) => void;
+  onToggleMobileMenu?: () => void;
 }
 
-export default function Header({ onSearch, onNavigateTab }: Props) {
+export default function Header({ onSearch, onNavigateTab, onToggleMobileMenu }: Props) {
   const { theme, toggleTheme } = useTheme();
   const [searchQuery, setSearchQuery] = useState("");
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
@@ -154,27 +156,41 @@ export default function Header({ onSearch, onNavigateTab }: Props) {
   };
 
   return (
-    <header className="h-16 px-6 border-b flex items-center justify-between sticky top-0 z-40 transition-colors duration-200 bg-white/90 dark:bg-[#070D1A]/90 backdrop-blur-xl border-slate-200 dark:border-slate-800/80">
-      {/* Search Bar with ⌘ K */}
-      <div className="relative w-full max-w-md">
-        <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
-          <Search className="w-4 h-4" />
-        </div>
-        <input
-          type="text"
-          value={searchQuery}
-          onChange={handleSearchChange}
-          placeholder="Search merchants, PAN, GSTIN, or Application ID..."
-          className="w-full pl-9 pr-14 py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all font-sans"
-        />
-        <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-          <kbd className="px-1.5 py-0.5 text-[10px] font-mono font-semibold text-slate-400 dark:text-slate-500 bg-slate-200/60 dark:bg-slate-800 rounded border border-slate-300/60 dark:border-slate-700">
-            ⌘ K
-          </kbd>
+    <header className="h-16 px-3 sm:px-6 border-b flex items-center justify-between sticky top-0 z-40 transition-colors duration-200 bg-white/90 dark:bg-[#070D1A]/90 backdrop-blur-xl border-slate-200 dark:border-slate-800/80">
+      {/* Left: Hamburger Menu (Mobile) + Search Bar */}
+      <div className="flex items-center gap-2 flex-1 max-w-md min-w-0 mr-2">
+        {onToggleMobileMenu && (
+          <button
+            onClick={onToggleMobileMenu}
+            aria-label="Open navigation menu"
+            className="lg:hidden p-2 rounded-xl border transition-all duration-200 bg-slate-100 dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 cursor-pointer shrink-0"
+          >
+            <Menu className="w-4 h-4" />
+          </button>
+        )}
+
+        {/* Search Bar with ⌘ K */}
+        <div className="relative w-full">
+          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+            <Search className="w-3.5 h-3.5" />
+          </div>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            placeholder="Search merchants, PAN, GSTIN..."
+            className="w-full pl-8 sm:pl-9 pr-2 sm:pr-14 py-1.5 sm:py-2 text-xs rounded-xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500 transition-all font-sans"
+          />
+          <div className="hidden sm:flex absolute inset-y-0 right-0 pr-3 items-center pointer-events-none">
+            <kbd className="px-1.5 py-0.5 text-[10px] font-mono font-semibold text-slate-400 dark:text-slate-500 bg-slate-200/60 dark:bg-slate-800 rounded border border-slate-300/60 dark:border-slate-700">
+              ⌘ K
+            </kbd>
+          </div>
         </div>
       </div>
 
-      <div className="flex items-center gap-3.5">
+      {/* Right Actions: Theme Toggle, Notifications, User Profile */}
+      <div className="flex items-center gap-2 sm:gap-3.5 shrink-0">
         {/* Dark / Light Mode Switch */}
         <button
           onClick={toggleTheme}
@@ -211,7 +227,7 @@ export default function Header({ onSearch, onNavigateTab }: Props) {
 
           {/* Dropdown Tray Popover */}
           {isNotificationOpen && (
-            <div className="absolute right-0 mt-3 w-80 sm:w-96 rounded-2xl bg-white dark:bg-[#0B132B] border border-slate-200 dark:border-slate-800 shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150 backdrop-blur-2xl">
+            <div className="absolute right-0 mt-3 w-[calc(100vw-24px)] sm:w-96 max-w-sm rounded-2xl bg-white dark:bg-[#0B132B] border border-slate-200 dark:border-slate-800 shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150 backdrop-blur-2xl">
               {/* Header */}
               <div className="p-4 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -361,7 +377,7 @@ export default function Header({ onSearch, onNavigateTab }: Props) {
 
           {/* User Menu Popover */}
           {isUserMenuOpen && (
-            <div className="absolute right-0 mt-2 w-52 rounded-xl bg-white dark:bg-[#0B132B] border border-slate-200 dark:border-slate-800 shadow-xl z-50 p-1.5 text-xs animate-in fade-in slide-in-from-top-2 duration-150">
+            <div className="absolute right-0 mt-2 w-52 max-w-[calc(100vw-32px)] rounded-xl bg-white dark:bg-[#0B132B] border border-slate-200 dark:border-slate-800 shadow-xl z-50 p-1.5 text-xs animate-in fade-in slide-in-from-top-2 duration-150">
               <div className="px-3 py-2 border-b border-slate-100 dark:border-slate-800">
                 <p className="font-bold text-slate-900 dark:text-slate-100">Akshay Pandey</p>
                 <p className="text-[10px] text-slate-400">akshay.pandey@razorpay.com</p>

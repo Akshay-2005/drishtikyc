@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import {
   LayoutDashboard,
   UserPlus,
@@ -12,17 +11,18 @@ import {
   FileText,
   Terminal,
   PlayCircle,
-  CheckCircle2,
   Zap,
-  Radio
+  X
 } from "lucide-react";
 
 interface Props {
   activeTab: string;
   setActiveTab: (tab: string) => void;
+  isOpen?: boolean;
+  onClose?: () => void;
 }
 
-export default function Sidebar({ activeTab, setActiveTab }: Props) {
+export default function Sidebar({ activeTab, setActiveTab, isOpen = false, onClose }: Props) {
   const navItems = [
     { id: "overview", label: "Overview", icon: <LayoutDashboard className="w-4 h-4" /> },
     { id: "onboarding", label: "Onboarding", icon: <UserPlus className="w-4 h-4" /> },
@@ -35,11 +35,16 @@ export default function Sidebar({ activeTab, setActiveTab }: Props) {
     { id: "demo_scenarios", label: "Demo Scenarios", icon: <PlayCircle className="w-4 h-4" /> }
   ];
 
-  return (
-    <aside className="w-64 bg-[#0A1024] border-r border-[#151D38] flex flex-col justify-between h-screen sticky top-0 z-40 select-none shrink-0 text-slate-300">
+  const handleItemClick = (id: string) => {
+    setActiveTab(id);
+    if (onClose) onClose();
+  };
+
+  const sidebarContent = (
+    <div className="flex flex-col justify-between h-full">
       {/* Top Brand */}
       <div>
-        <div className="p-5 border-b border-[#151D38]/80">
+        <div className="p-5 border-b border-[#151D38]/80 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg shadow-blue-500/25">
               <Zap className="w-4 h-4 text-white fill-current" />
@@ -58,6 +63,17 @@ export default function Sidebar({ activeTab, setActiveTab }: Props) {
               </p>
             </div>
           </div>
+
+          {/* Close button for mobile */}
+          {onClose && (
+            <button
+              onClick={onClose}
+              className="lg:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+              aria-label="Close navigation menu"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          )}
         </div>
 
         {/* Navigation list */}
@@ -67,8 +83,8 @@ export default function Sidebar({ activeTab, setActiveTab }: Props) {
             return (
               <button
                 key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all duration-150 text-left ${
+                onClick={() => handleItemClick(item.id)}
+                className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all duration-150 text-left cursor-pointer ${
                   isActive
                     ? "bg-[#16234B] text-white font-semibold shadow-sm border border-blue-500/20"
                     : "text-slate-400 hover:text-slate-200 hover:bg-[#0F1836]"
@@ -127,6 +143,34 @@ export default function Sidebar({ activeTab, setActiveTab }: Props) {
           </p>
         </div>
       </div>
-    </aside>
+    </div>
+  );
+
+  return (
+    <>
+      {/* 1. Desktop Persistent Sidebar */}
+      <aside className="hidden lg:flex w-64 bg-[#0A1024] border-r border-[#151D38] flex-col justify-between h-screen sticky top-0 z-40 select-none shrink-0 text-slate-300">
+        {sidebarContent}
+      </aside>
+
+      {/* 2. Mobile Backdrop Overlay */}
+      {isOpen && (
+        <div
+          onClick={onClose}
+          className="lg:hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 transition-opacity duration-200"
+          aria-hidden="true"
+        />
+      )}
+
+      {/* 3. Mobile Slide-Over Drawer */}
+      <aside
+        className={`lg:hidden fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] bg-[#0A1024] border-r border-[#151D38] flex flex-col justify-between h-full select-none text-slate-300 transform transition-transform duration-300 ease-in-out shadow-2xl ${
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        {sidebarContent}
+      </aside>
+    </>
   );
 }
+

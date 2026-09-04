@@ -44,6 +44,7 @@ export default function CommandCenterPage() {
   const [showAuditModal, setShowAuditModal] = useState<boolean>(false);
   const [dateRange, setDateRange] = useState<string>("Last 7 days");
   const [isDateDropdownOpen, setIsDateDropdownOpen] = useState<boolean>(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const dateDropdownRef = useRef<HTMLDivElement>(null);
 
   // Close date dropdown on outside click
@@ -116,20 +117,28 @@ export default function CommandCenterPage() {
   const currentTab = validTabs.includes(normalizedTab) ? normalizedTab : "overview";
 
   return (
-    <div className="flex h-screen overflow-hidden bg-[#F8FAFC] dark:bg-[#070D1A] text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200">
+    <div className="flex min-h-screen lg:h-screen lg:overflow-hidden bg-[#F8FAFC] dark:bg-[#070D1A] text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200">
       {/* 3D Kinetic Three.js Background Animation */}
       <ThreeDBackground />
 
-      {/* Left Sidebar */}
-      <Sidebar activeTab={currentTab} setActiveTab={setActiveTab} />
+      {/* Left Sidebar (Desktop Persistent + Mobile Slide-over Drawer) */}
+      <Sidebar
+        activeTab={currentTab}
+        setActiveTab={setActiveTab}
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
+      />
 
       {/* Main Container */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto relative z-10">
+      <div className="flex-1 flex flex-col min-w-0 overflow-y-auto relative z-10 w-full">
         {/* Top Header */}
-        <Header onNavigateTab={setActiveTab} />
+        <Header
+          onNavigateTab={setActiveTab}
+          onToggleMobileMenu={() => setIsMobileMenuOpen((prev) => !prev)}
+        />
 
         {/* Content Body - Switches Dynamically on Sidebar Click */}
-        <main className="p-6 md:p-8 space-y-6 max-w-7xl w-full mx-auto">
+        <main className="p-3.5 sm:p-6 md:p-8 space-y-4 sm:space-y-6 max-w-7xl w-full mx-auto">
           {/* TAB 1: OVERVIEW COMMAND CENTER (Default Mockup View) */}
           {currentTab === "overview" && (
             <>
@@ -144,10 +153,10 @@ export default function CommandCenterPage() {
                       return "Good evening";
                     })()}, Akshay 👋
                   </div>
-                  <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tight mt-0.5">
+                  <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-slate-900 dark:text-slate-100 tracking-tight mt-0.5">
                     KYC Operations Command Center
                   </h1>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                  <p className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1">
                     Autonomous verification. Lower risk. Faster onboarding. A safer Internet for businesses.
                   </p>
                 </div>
@@ -169,7 +178,7 @@ export default function CommandCenterPage() {
 
                   {/* Dropdown Menu Options */}
                   {isDateDropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white dark:bg-[#0B132B] border border-slate-200 dark:border-slate-800 shadow-2xl z-50 p-2 text-xs animate-in fade-in slide-in-from-top-2 duration-150 backdrop-blur-2xl">
+                    <div className="absolute left-0 sm:left-auto sm:right-0 mt-2 w-64 max-w-[calc(100vw-32px)] rounded-2xl bg-white dark:bg-[#0B132B] border border-slate-200 dark:border-slate-800 shadow-2xl z-50 p-2 text-xs animate-in fade-in slide-in-from-top-2 duration-150 backdrop-blur-2xl">
                       <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 border-b border-slate-100 dark:border-slate-800/80">
                         Select Verification Period
                       </div>
