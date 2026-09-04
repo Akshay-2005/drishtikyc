@@ -100,13 +100,28 @@ export default function CommandCenterPage() {
     behavioural: 72
   };
 
+  // Normalize activeTab to canonical underscore format with fallback to overview
+  const validTabs = [
+    "overview",
+    "onboarding",
+    "kyc_intel",
+    "risk_engine",
+    "fraud_network",
+    "merchants",
+    "audit_logs",
+    "api_playground",
+    "demo_scenarios"
+  ];
+  const normalizedTab = (activeTab || "overview").replace(/-/g, "_");
+  const currentTab = validTabs.includes(normalizedTab) ? normalizedTab : "overview";
+
   return (
     <div className="flex h-screen overflow-hidden bg-[#F8FAFC] dark:bg-[#070D1A] text-slate-900 dark:text-slate-100 font-sans transition-colors duration-200">
       {/* 3D Kinetic Three.js Background Animation */}
       <ThreeDBackground />
 
       {/* Left Sidebar */}
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Sidebar activeTab={currentTab} setActiveTab={setActiveTab} />
 
       {/* Main Container */}
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto relative z-10">
@@ -116,7 +131,7 @@ export default function CommandCenterPage() {
         {/* Content Body - Switches Dynamically on Sidebar Click */}
         <main className="p-6 md:p-8 space-y-6 max-w-7xl w-full mx-auto">
           {/* TAB 1: OVERVIEW COMMAND CENTER (Default Mockup View) */}
-          {activeTab === "overview" && (
+          {currentTab === "overview" && (
             <>
               {/* Greeting & Command Center Title Bar */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -236,7 +251,7 @@ export default function CommandCenterPage() {
           )}
 
           {/* TAB 2: ONBOARDING PORTAL */}
-          {activeTab === "onboarding" && (
+          {currentTab === "onboarding" && (
             <OnboardingView
               onVerificationComplete={(res) => {
                 setPipelineResult(res);
@@ -246,16 +261,16 @@ export default function CommandCenterPage() {
           )}
 
           {/* TAB 3: KYC INTELLIGENCE & FORENSICS */}
-          {activeTab === "kyc_intel" && <KYCIntelView />}
+          {currentTab === "kyc_intel" && <KYCIntelView />}
 
           {/* TAB 4: RISK ENGINE & POLICY CONTROLLER */}
-          {activeTab === "risk_engine" && <RiskEngineView />}
+          {currentTab === "risk_engine" && <RiskEngineView />}
 
           {/* TAB 5: FRAUD NETWORK GRAPH EXPLORER */}
-          {activeTab === "fraud_network" && <FraudNetworkView />}
+          {currentTab === "fraud_network" && <FraudNetworkView />}
 
           {/* TAB 6: MERCHANTS DIRECTORY */}
-          {activeTab === "merchants" && (
+          {currentTab === "merchants" && (
             <MerchantsView
               onInspectMerchant={(merchant) => {
                 handleSelectMerchant(merchant);
@@ -265,13 +280,13 @@ export default function CommandCenterPage() {
           )}
 
           {/* TAB 7: CRYPTOGRAPHIC AUDIT LOGS */}
-          {activeTab === "audit_logs" && <AuditLogsView />}
+          {currentTab === "audit_logs" && <AuditLogsView />}
 
           {/* TAB 8: DEVELOPER API PLAYGROUND */}
-          {activeTab === "api_playground" && <ApiPlaygroundView />}
+          {currentTab === "api_playground" && <ApiPlaygroundView />}
 
           {/* TAB 9: BUILDATHON DEMO SCENARIOS */}
-          {activeTab === "demo_scenarios" && (
+          {currentTab === "demo_scenarios" && (
             <DemoScenariosView
               onSelectResult={(res) => {
                 setPipelineResult(res);

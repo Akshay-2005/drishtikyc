@@ -36,7 +36,7 @@ const INITIAL_NOTIFICATIONS: NotificationItem[] = [
     timestamp: "2m ago",
     type: "critical",
     unread: true,
-    targetTab: "fraud-network"
+    targetTab: "fraud_network"
   },
   {
     id: "notif-2",
@@ -63,7 +63,7 @@ const INITIAL_NOTIFICATIONS: NotificationItem[] = [
     timestamp: "3h ago",
     type: "info",
     unread: false,
-    targetTab: "audit-logs"
+    targetTab: "audit_logs"
   },
   {
     id: "notif-5",
@@ -72,7 +72,7 @@ const INITIAL_NOTIFICATIONS: NotificationItem[] = [
     timestamp: "5h ago",
     type: "success",
     unread: false,
-    targetTab: "audit-logs"
+    targetTab: "audit_logs"
   }
 ];
 
@@ -322,7 +322,7 @@ export default function Header({ onSearch, onNavigateTab }: Props) {
                 {onNavigateTab && (
                   <button
                     onClick={() => {
-                      onNavigateTab("audit-logs");
+                      onNavigateTab("audit_logs");
                       setIsNotificationOpen(false);
                     }}
                     className="text-[11px] font-semibold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 cursor-pointer"
@@ -372,7 +372,7 @@ export default function Header({ onSearch, onNavigateTab }: Props) {
               <div className="py-1">
                 <button
                   onClick={() => {
-                    if (onNavigateTab) onNavigateTab("api-playground");
+                    if (onNavigateTab) onNavigateTab("api_playground");
                     setIsUserMenuOpen(false);
                   }}
                   className="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-between cursor-pointer"
@@ -382,7 +382,7 @@ export default function Header({ onSearch, onNavigateTab }: Props) {
                 </button>
                 <button
                   onClick={() => {
-                    if (onNavigateTab) onNavigateTab("audit-logs");
+                    if (onNavigateTab) onNavigateTab("audit_logs");
                     setIsUserMenuOpen(false);
                   }}
                   className="w-full text-left px-3 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-between cursor-pointer"
