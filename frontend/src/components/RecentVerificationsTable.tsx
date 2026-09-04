@@ -20,6 +20,7 @@ export interface VerificationRow {
 interface Props {
   selectedId: string;
   onSelectMerchant: (merchant: VerificationRow) => void;
+  onViewAll?: () => void;
 }
 
 export const VERIFICATION_ROWS: VerificationRow[] = [
@@ -90,7 +91,7 @@ export const VERIFICATION_ROWS: VerificationRow[] = [
   }
 ];
 
-export default function RecentVerificationsTable({ selectedId, onSelectMerchant }: Props) {
+export default function RecentVerificationsTable({ selectedId, onSelectMerchant, onViewAll }: Props) {
   const getScoreColor = (score: number) => {
     if (score < 30) return "text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950/60 border-emerald-300 dark:border-emerald-800";
     if (score < 60) return "text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-950/60 border-emerald-300 dark:border-emerald-800";
@@ -154,7 +155,10 @@ export default function RecentVerificationsTable({ selectedId, onSelectMerchant 
           </p>
         </div>
 
-        <button className="flex items-center gap-1 text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">
+        <button
+          onClick={onViewAll}
+          className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+        >
           View All <ArrowRight className="w-3 h-3" />
         </button>
       </div>

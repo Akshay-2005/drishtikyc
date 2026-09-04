@@ -3,7 +3,11 @@
 import React from "react";
 import { ArrowRight } from "lucide-react";
 
-export default function LiveSystemActivityFeed() {
+interface Props {
+  onViewAll?: () => void;
+}
+
+export default function LiveSystemActivityFeed({ onViewAll }: Props) {
   const activities = [
     { text: "PAN verified for Tata Digital", time: "2s ago", color: "bg-blue-500" },
     { text: "GSTIN matched with MCA21", time: "5s ago", color: "bg-emerald-500" },
@@ -19,7 +23,10 @@ export default function LiveSystemActivityFeed() {
         <h3 className="text-base font-bold text-slate-900 dark:text-slate-100 tracking-tight">
           Live System Activity
         </h3>
-        <button className="flex items-center gap-1 text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline">
+        <button
+          onClick={onViewAll}
+          className="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/50 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+        >
           View All <ArrowRight className="w-3 h-3" />
         </button>
       </div>
