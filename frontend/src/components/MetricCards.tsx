@@ -1,15 +1,92 @@
 "use client";
 
 import React from "react";
-import { FileText, CheckCircle2, Clock, XCircle, Zap, ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { FileText, CheckCircle2, Clock, XCircle, Zap } from "lucide-react";
 
-export default function MetricCards() {
+interface Props {
+  dateRange?: string;
+}
+
+export default function MetricCards({ dateRange = "Last 7 days" }: Props) {
+  const getMetrics = () => {
+    switch (dateRange) {
+      case "Today":
+        return {
+          total: "184",
+          totalTrend: "+18%",
+          approved: "169",
+          approvedTrend: "+21%",
+          review: "9",
+          reviewTrend: "-12%",
+          rejected: "6",
+          rejectedTrend: "-4%",
+          latency: "2.1s",
+          latencyTrend: "-45%"
+        };
+      case "Yesterday":
+        return {
+          total: "219",
+          totalTrend: "+15%",
+          approved: "198",
+          approvedTrend: "+14%",
+          review: "12",
+          reviewTrend: "-8%",
+          rejected: "9",
+          rejectedTrend: "-2%",
+          latency: "2.4s",
+          latencyTrend: "-40%"
+        };
+      case "Last 30 days":
+        return {
+          total: "5,640",
+          totalTrend: "+24%",
+          approved: "5,180",
+          approvedTrend: "+22%",
+          review: "290",
+          reviewTrend: "-5%",
+          rejected: "170",
+          rejectedTrend: "-14%",
+          latency: "2.9s",
+          latencyTrend: "-38%"
+        };
+      case "This Quarter (Q3 2026)":
+        return {
+          total: "18,920",
+          totalTrend: "+31%",
+          approved: "17,450",
+          approvedTrend: "+29%",
+          review: "890",
+          reviewTrend: "-9%",
+          rejected: "580",
+          rejectedTrend: "-22%",
+          latency: "2.7s",
+          latencyTrend: "-46%"
+        };
+      case "Last 7 days":
+      default:
+        return {
+          total: "1,284",
+          totalTrend: "+12%",
+          approved: "1,173",
+          approvedTrend: "+8%",
+          review: "67",
+          reviewTrend: "-3%",
+          rejected: "44",
+          rejectedTrend: "-18%",
+          latency: "2.8s",
+          latencyTrend: "-42%"
+        };
+    }
+  };
+
+  const m = getMetrics();
+
   const cards = [
     {
       id: "total",
       label: "Total Applications",
-      value: "1,284",
-      trend: "+12%",
+      value: m.total,
+      trend: m.totalTrend,
       isPositive: true,
       icon: <FileText className="w-5 h-5 text-blue-500" />,
       iconBg: "bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400",
@@ -19,8 +96,8 @@ export default function MetricCards() {
     {
       id: "approved",
       label: "Auto Approved",
-      value: "1,173",
-      trend: "+8%",
+      value: m.approved,
+      trend: m.approvedTrend,
       isPositive: true,
       icon: <CheckCircle2 className="w-5 h-5 text-emerald-500" />,
       iconBg: "bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400",
@@ -30,8 +107,8 @@ export default function MetricCards() {
     {
       id: "review",
       label: "Under Review",
-      value: "67",
-      trend: "-3%",
+      value: m.review,
+      trend: m.reviewTrend,
       isPositive: false,
       icon: <Clock className="w-5 h-5 text-amber-500" />,
       iconBg: "bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400",
@@ -41,8 +118,8 @@ export default function MetricCards() {
     {
       id: "rejected",
       label: "Rejected / Flagged",
-      value: "44",
-      trend: "-18%",
+      value: m.rejected,
+      trend: m.rejectedTrend,
       isPositive: false,
       icon: <XCircle className="w-5 h-5 text-rose-500" />,
       iconBg: "bg-rose-50 dark:bg-rose-950/50 text-rose-600 dark:text-rose-400",
@@ -52,8 +129,8 @@ export default function MetricCards() {
     {
       id: "latency",
       label: "Avg. Verification Time",
-      value: "2.8s",
-      trend: "-42%",
+      value: m.latency,
+      trend: m.latencyTrend,
       isPositive: true,
       icon: <Zap className="w-5 h-5 text-sky-500" />,
       iconBg: "bg-sky-50 dark:bg-sky-950/50 text-sky-600 dark:text-sky-400",

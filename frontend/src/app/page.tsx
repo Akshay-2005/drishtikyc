@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import ThreeDBackground from "@/components/ThreeDBackground";
@@ -24,7 +24,16 @@ import DemoScenariosView from "@/components/views/DemoScenariosView";
 import { runScenario } from "@/lib/api";
 import { PipelineResult } from "@/lib/types";
 import confetti from "canvas-confetti";
-import { ChevronDown, Calendar } from "lucide-react";
+import { ChevronDown, Calendar, Check } from "lucide-react";
+
+const DATE_RANGE_OPTIONS = [
+  { id: "today", label: "Today", sub: "Real-time stream" },
+  { id: "yesterday", label: "Yesterday", sub: "Last 24 hours" },
+  { id: "7days", label: "Last 7 days", sub: "Weekly aggregate" },
+  { id: "30days", label: "Last 30 days", sub: "Monthly summary" },
+  { id: "quarter", label: "This Quarter (Q3 2026)", sub: "Statutory fiscal period" },
+  { id: "custom", label: "Custom Range", sub: "Choose start & end dates" }
+];
 
 export default function CommandCenterPage() {
   const [activeTab, setActiveTab] = useState<string>("overview");
@@ -34,6 +43,19 @@ export default function CommandCenterPage() {
   const [showDetailModal, setShowDetailModal] = useState<boolean>(false);
   const [showAuditModal, setShowAuditModal] = useState<boolean>(false);
   const [dateRange, setDateRange] = useState<string>("Last 7 days");
+  const [isDateDropdownOpen, setIsDateDropdownOpen] = useState<boolean>(false);
+  const dateDropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close date dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dateDropdownRef.current && !dateDropdownRef.current.contains(event.target as Node)) {
+        setIsDateDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Load initial pipeline for Tata Digital & check URL tab
   useEffect(() => {
@@ -89,7 +111,7 @@ export default function CommandCenterPage() {
       {/* Main Container */}
       <div className="flex-1 flex flex-col min-w-0 overflow-y-auto relative z-10">
         {/* Top Header */}
-        <Header />
+        <Header onNavigateTab={setActiveTab} />
 
         {/* Content Body - Switches Dynamically on Sidebar Click */}
         <main className="p-6 md:p-8 space-y-6 max-w-7xl w-full mx-auto">
@@ -115,18 +137,61 @@ export default function CommandCenterPage() {
                   </p>
                 </div>
 
-                {/* Date range dropdown */}
-                <div className="flex items-center gap-2.5 self-start sm:self-auto">
-                  <div className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 shadow-sm cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-colors">
-                    <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                {/* Interactive Date range dropdown */}
+                <div className="relative self-start sm:self-auto" ref={dateDropdownRef}>
+                  <button
+                    onClick={() => setIsDateDropdownOpen((prev) => !prev)}
+                    className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300 shadow-sm cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800/80 transition-all"
+                  >
+                    <Calendar className="w-3.5 h-3.5 text-blue-500" />
                     <span>{dateRange}</span>
-                    <ChevronDown className="w-3 h-3 text-slate-400" />
-                  </div>
+                    <ChevronDown
+                      className={`w-3 h-3 text-slate-400 transition-transform duration-200 ${
+                        isDateDropdownOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+
+                  {/* Dropdown Menu Options */}
+                  {isDateDropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white dark:bg-[#0B132B] border border-slate-200 dark:border-slate-800 shadow-2xl z-50 p-2 text-xs animate-in fade-in slide-in-from-top-2 duration-150 backdrop-blur-2xl">
+                      <div className="px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 border-b border-slate-100 dark:border-slate-800/80">
+                        Select Verification Period
+                      </div>
+                      <div className="py-1 space-y-0.5">
+                        {DATE_RANGE_OPTIONS.map((opt) => {
+                          const isSelected = dateRange === opt.label;
+                          return (
+                            <button
+                              key={opt.id}
+                              onClick={() => {
+                                setDateRange(opt.label);
+                                setIsDateDropdownOpen(false);
+                              }}
+                              className={`w-full text-left px-3 py-2 rounded-xl transition-colors flex items-center justify-between cursor-pointer ${
+                                isSelected
+                                  ? "bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 font-bold"
+                                  : "text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60"
+                              }`}
+                            >
+                              <div>
+                                <div className="text-xs">{opt.label}</div>
+                                <div className="text-[10px] text-slate-400 font-normal">
+                                  {opt.sub}
+                                </div>
+                              </div>
+                              {isSelected && <Check className="w-3.5 h-3.5 text-blue-500" />}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
 
-              {/* Row 1: 5 KPI Metric Cards */}
-              <MetricCards />
+              {/* Row 1: 5 KPI Metric Cards (dynamically reactive to dateRange) */}
+              <MetricCards dateRange={dateRange} />
 
               {/* Row 2: Stepper (6 cols) + Donut (3 cols) + Trust Card (3 cols) */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
