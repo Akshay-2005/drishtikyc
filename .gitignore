@@ -1,0 +1,40 @@
+# Node dependencies and build
+node_modules/
+frontend/node_modules/
+.next/
+frontend/.next/
+out/
+frontend/out/
+build/
+dist/
+
+# Python virtual environment and cache
+venv/
+.venv/
+backend/venv/
+__pycache__/
+backend/__pycache__/
+backend/app/__pycache__/
+backend/app/engine/__pycache__/
+backend/app/api/__pycache__/
+backend/app/data/__pycache__/
+backend/tests/__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+*.egg-info/
+
+# Environment and secrets
+.env
+.env.local
+.env.*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
