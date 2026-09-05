@@ -154,8 +154,8 @@ export default function PipelineVisualizer({ telemetry, activeTierIndex = 5, isR
                         <span className="text-slate-300 font-bold">{step.duration_ms}ms</span>
                       </span>
                       {step.details?.zero_api_cost_saved && (
-                        <span className="text-emerald-400 font-semibold flex items-center gap-1">
-                          ⚡ Zero External API Cost Incurred
+                        <span className="text-emerald-400 font-bold flex items-center gap-1 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/30 text-[11px]">
+                          ⚡ 0ms Rejection: ₹142.50 API Cost Saved
                         </span>
                       )}
                     </div>
@@ -172,6 +172,33 @@ export default function PipelineVisualizer({ telemetry, activeTierIndex = 5, isR
 
               {isExpanded && (
                 <div className="px-5 pb-5 pt-3 border-t border-slate-800/80 bg-slate-950/90">
+                  {/* Highlight Banner for 0ms Checksum Cost Savings */}
+                  {step.details?.zero_api_cost_saved && (
+                    <div className="mb-3.5 p-3 rounded-xl bg-gradient-to-r from-emerald-950/60 via-slate-900 to-slate-950 border border-emerald-500/40 text-xs">
+                      <div className="flex items-center gap-2 text-emerald-400 font-bold mb-1">
+                        <Zap className="w-4 h-4 text-emerald-400 shrink-0" />
+                        <span>0ms Local Checksum Gate — 100% External API Cost Savings</span>
+                      </div>
+                      <p className="text-slate-300 text-[11px] leading-relaxed">
+                        Deterministic Mod-36 weighted mathematical validation intercepted the invalid check digit in <strong>{step.duration_ms}ms</strong> locally.
+                        Prevented <strong>₹142.50</strong> in unnecessary third-party registry API calls (MCA21: ₹75, GSTN: ₹45, Bank IMPS: ₹22.50).
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Highlight Banner for Autonomous Live Gateway Activation */}
+                  {step.status === "ACTIVATED" && (
+                    <div className="mb-3.5 p-3 rounded-xl bg-gradient-to-r from-emerald-950/60 via-slate-900 to-slate-950 border border-emerald-500/40 text-xs">
+                      <div className="flex items-center gap-2 text-emerald-400 font-bold mb-1">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                        <span>Autonomous Live Gateway Provisioning — Green Path Tier 1</span>
+                      </div>
+                      <p className="text-slate-300 text-[11px] leading-relaxed">
+                        Full statutory underwriting completed autonomously in <strong>&lt;2.4 seconds</strong> without human ops touchpoints. Razorpay Linked Account live with instant API keys.
+                      </p>
+                    </div>
+                  )}
+
                   <div className="text-[11px] font-mono text-slate-400 mb-3 uppercase tracking-wider flex items-center justify-between">
                     <span>Deterministic Parameters & Field Audit</span>
                     <span className="text-blue-400 font-bold">Latency: {step.duration_ms}ms</span>

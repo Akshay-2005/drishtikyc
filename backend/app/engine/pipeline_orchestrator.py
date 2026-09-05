@@ -113,7 +113,10 @@ class DrishtiPipelineOrchestrator:
                 "expected_checksum": gstin_details.get("expected_check_digit", ""),
                 "verhoeff_d5_status": "VALID" if aadhaar_valid else "INVALID",
                 "pan_entity_type": pan_details.get("entity_type", "Unknown"),
-                "zero_api_cost_saved": not tier2_passed
+                "zero_api_cost_saved": not tier2_passed,
+                "api_cost_saved_inr": "₹142.50" if not tier2_passed else "₹0.00",
+                "rejection_speed": "0ms (Local Mod-36 Checksum Gate)" if not tier2_passed else "2ms (Algorithmic Pass)",
+                "calls_prevented": "MCA21 Master (₹75) + GSTN Registry (₹45) + Penny Drop (₹22.50)" if not tier2_passed else "None"
             }
         })
 
@@ -129,7 +132,7 @@ class DrishtiPipelineOrchestrator:
                 "gstn_portal": {"status": "SKIPPED", "filing_regularity_score": 0.0, "latency_ms": 0},
                 "mca21": {"status": "SKIPPED", "mca_health_score": 0.0, "latency_ms": 0},
                 "bank_penny_drop": {"status": "SKIPPED", "fuzzy_name_score": 0.0, "latency_ms": 0},
-                "api_cost_saved_inr": 45.0
+                "api_cost_saved_inr": 142.50
             }
         else:
             tier3_results = execute_multi_registry_mesh({

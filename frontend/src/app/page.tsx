@@ -228,7 +228,16 @@ export default function CommandCenterPage() {
                 </div>
 
                 <div className="lg:col-span-3">
-                  <TrustPromoCard />
+                  <TrustPromoCard
+                    onRunScenario={async (scenarioId) => {
+                      const matched = VERIFICATION_ROWS.find((r) => r.scenarioId === scenarioId);
+                      if (matched) {
+                        await handleSelectMerchant(matched);
+                        setShowDetailModal(true);
+                      }
+                    }}
+                    onViewScenarios={() => setActiveTab("demo_scenarios")}
+                  />
                 </div>
               </div>
 

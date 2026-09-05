@@ -10,7 +10,7 @@ export interface VerificationRow {
   pan: string;
   score: number;
   status: "Low" | "Medium" | "High" | "Critical";
-  decision: "Approved" | "Under Review" | "Rejected";
+  decision: "Approved" | "Under Review" | "Rejected" | "Quarantined";
   time: string;
   avatarBg: string;
   avatarLetter: string;
@@ -42,11 +42,11 @@ export const VERIFICATION_ROWS: VerificationRow[] = [
     name: "Kuber FinTech Services",
     type: "Private Ltd",
     pan: "AABCK9999F",
-    score: 78,
-    status: "High",
-    decision: "Under Review",
-    time: "6.1s",
-    avatarBg: "bg-indigo-900",
+    score: 88,
+    status: "Critical",
+    decision: "Quarantined",
+    time: "0.4s",
+    avatarBg: "bg-rose-800",
     avatarLetter: "K",
     scenarioId: "forged_gstin"
   },
@@ -131,10 +131,11 @@ export default function RecentVerificationsTable({ selectedId, onSelectMerchant,
           </span>
         );
       case "Rejected":
+      case "Quarantined":
         return (
           <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-400 border border-rose-200 dark:border-rose-800">
             <X className="w-3 h-3 text-rose-600" />
-            Rejected
+            {decision}
           </span>
         );
       default:

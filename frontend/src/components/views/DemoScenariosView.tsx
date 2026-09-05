@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { PlayCircle, ShieldCheck, AlertTriangle, Cpu, Network, CheckCircle2, ArrowRight, Loader2 } from "lucide-react";
+import { PlayCircle, ShieldCheck, AlertTriangle, Cpu, Network, CheckCircle2, ArrowRight, Loader2, Zap, ShieldAlert, Layers } from "lucide-react";
 import { runScenario } from "@/lib/api";
 import { PipelineResult } from "@/lib/types";
 import confetti from "canvas-confetti";
@@ -35,9 +35,9 @@ export default function DemoScenariosView({ onSelectResult }: Props) {
       tag: "FLAGGED & BLOCKED",
       tagColor: "bg-amber-100 dark:bg-amber-950/80 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-800",
       icon: <Cpu className="w-5 h-5 text-amber-500" />,
-      desc: "Adversary alters one character in GSTIN to bypass visual review. Deterministic Mod-36 checksum mathematical validator intercepts the forgery before calling any paid third-party APIs.",
+      desc: "Adversary alters one character in GSTIN to bypass visual review. Deterministic Mod-36 checksum mathematical validator intercepts the forgery in 0ms before calling any paid third-party APIs.",
       metrics: [
-        { label: "Interception Speed", value: "0.4s" },
+        { label: "Interception Speed", value: "0.4s (0ms gate)" },
         { label: "API Cost Saved", value: "₹142.50" },
         { label: "Decision", value: "Tier 3: Quarantine" }
       ]
@@ -113,6 +113,136 @@ export default function DemoScenariosView({ onSelectResult }: Props) {
           <span className="px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-950/60 text-blue-800 dark:text-blue-300 border border-blue-300 dark:border-blue-800 text-xs font-bold font-mono">
             4 Interactive Scenarios Ready
           </span>
+        </div>
+      </div>
+
+      {/* CENTERPIECE: TIER WALKTHROUGH CONTRAST MATRIX */}
+      <div className="p-6 rounded-2xl bg-gradient-to-br from-slate-900 via-[#0C1530] to-slate-950 border border-blue-500/30 shadow-xl text-white space-y-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-800">
+          <div>
+            <div className="flex items-center gap-2">
+              <Layers className="w-4 h-4 text-blue-400" />
+              <span className="text-xs font-mono uppercase tracking-wider text-blue-400 font-bold">
+                Presentation Centerpiece &bull; Side-by-Side Tier Walkthrough
+              </span>
+            </div>
+            <h3 className="text-lg font-bold text-white mt-0.5">
+              Autonomous Green Path vs. 0ms Adversarial Interception
+            </h3>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-bold font-mono">
+              ⚡ ₹142.50 External API Cost Saved
+            </span>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Green Path Card */}
+          <div className="p-4 rounded-xl bg-emerald-950/30 border border-emerald-500/30 space-y-3 flex flex-col justify-between">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5 font-mono">
+                  <CheckCircle2 className="w-3.5 h-3.5" /> Tier 1: Autonomous Green Path
+                </span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300">
+                  Tata Digital
+                </span>
+              </div>
+              <p className="text-xs text-slate-300">
+                Statutory credentials match cleanly across all databases. Zero human touchpoints required.
+              </p>
+              <div className="space-y-1.5 text-[11px] font-mono text-slate-300 pt-1">
+                <div className="flex items-center justify-between py-1 border-b border-emerald-950/80">
+                  <span className="text-slate-400">Tier 1: DPDP Ingestion</span>
+                  <span className="text-emerald-400 font-bold">PII Masked &amp; Vaulted</span>
+                </div>
+                <div className="flex items-center justify-between py-1 border-b border-emerald-950/80">
+                  <span className="text-slate-400">Tier 2: Math Checksum</span>
+                  <span className="text-emerald-400 font-bold">Mod-36 Pass ('5' Verified)</span>
+                </div>
+                <div className="flex items-center justify-between py-1 border-b border-emerald-950/80">
+                  <span className="text-slate-400">Tier 3: Multi-Registry</span>
+                  <span className="text-emerald-400 font-bold">MCA21 &amp; GSTR-3B Active</span>
+                </div>
+                <div className="flex items-center justify-between py-1 border-b border-emerald-950/80">
+                  <span className="text-slate-400">Tier 4: Graph Proximity</span>
+                  <span className="text-emerald-400 font-bold">0 Shell Links Flagged</span>
+                </div>
+                <div className="flex items-center justify-between py-1">
+                  <span className="text-slate-400">Tier 5: Razorpay Provisioning</span>
+                  <span className="text-emerald-400 font-bold">Live Keys in &lt;2.4s</span>
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => handleRun(scenarios[0])}
+              disabled={runningId !== null}
+              className="w-full py-2 px-3 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md shadow-emerald-600/30"
+            >
+              {runningId === "golden_path" ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <>
+                  <span>Run Live Green Path (&lt;2.4s)</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </>
+              )}
+            </button>
+          </div>
+
+          {/* Adversarial Checksum Forgery Card */}
+          <div className="p-4 rounded-xl bg-rose-950/30 border border-rose-500/30 space-y-3 flex flex-col justify-between">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-bold text-rose-400 uppercase tracking-wider flex items-center gap-1.5 font-mono">
+                  <ShieldAlert className="w-3.5 h-3.5" /> Tier 2: Adversarial Forgery Trap
+                </span>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-rose-500/20 text-rose-300">
+                  Kuber FinTech
+                </span>
+              </div>
+              <p className="text-xs text-slate-300">
+                Altered check digit caught locally at Tier 2 in 0ms. Halts expensive external API queries.
+              </p>
+              <div className="space-y-1.5 text-[11px] font-mono text-slate-300 pt-1">
+                <div className="flex items-center justify-between py-1 border-b border-rose-950/80">
+                  <span className="text-slate-400">Tier 1: DPDP Ingestion</span>
+                  <span className="text-emerald-400 font-bold">PII Masked &amp; Vaulted</span>
+                </div>
+                <div className="flex items-center justify-between py-1 border-b border-rose-950/80">
+                  <span className="text-slate-400">Tier 2: Math Checksum</span>
+                  <span className="text-rose-400 font-bold">HALTED 0ms (Mod-36 '9' ≠ '1')</span>
+                </div>
+                <div className="flex items-center justify-between py-1 border-b border-rose-950/80">
+                  <span className="text-slate-400">External Registry Calls</span>
+                  <span className="text-emerald-400 font-bold">SKIPPED (₹142.50 Saved)</span>
+                </div>
+                <div className="flex items-center justify-between py-1 border-b border-rose-950/80">
+                  <span className="text-slate-400">Tier 4: Graph Proximity</span>
+                  <span className="text-rose-400 font-bold">Sec 248 Shell Cluster</span>
+                </div>
+                <div className="flex items-center justify-between py-1">
+                  <span className="text-slate-400">Tier 5: Underwriting Decision</span>
+                  <span className="text-rose-400 font-bold">SIU Hard Quarantine</span>
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => handleRun(scenarios[1])}
+              disabled={runningId !== null}
+              className="w-full py-2 px-3 rounded-lg bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md shadow-rose-600/30"
+            >
+              {runningId === "forged_gstin" ? (
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              ) : (
+                <>
+                  <span>Run Live Forgery Trap (0ms Gate)</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </>
+              )}
+            </button>
+          </div>
         </div>
       </div>
 

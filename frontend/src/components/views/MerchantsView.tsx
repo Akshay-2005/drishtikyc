@@ -84,7 +84,7 @@ export default function MerchantsView({ onInspectMerchant }: Props) {
 
         {/* Filter Pills */}
         <div className="flex items-center gap-2">
-          {["All", "Approved", "Under Review", "Rejected"].map((status) => (
+          {["All", "Approved", "Quarantined", "Rejected"].map((status) => (
             <button
               key={status}
               onClick={() => setFilterStatus(status)}
@@ -167,7 +167,7 @@ export default function MerchantsView({ onInspectMerchant }: Props) {
                     className={`inline-block px-2.5 py-0.5 rounded-full text-[11px] font-semibold border ${
                       m.decision === "Approved"
                         ? "bg-emerald-100 dark:bg-emerald-950/60 text-emerald-800 dark:text-emerald-300 border-emerald-300 dark:border-emerald-800"
-                        : m.decision === "Under Review"
+                        : m.decision === "Quarantined" || m.decision === "Under Review"
                         ? "bg-amber-100 dark:bg-amber-950/60 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-800"
                         : "bg-rose-100 dark:bg-rose-950/60 text-rose-800 dark:text-rose-300 border-rose-300 dark:border-rose-800"
                     }`}
